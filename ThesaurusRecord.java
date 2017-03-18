@@ -32,15 +32,18 @@ public class ThesaurusRecord extends Record{
 		
 		public int compare(FileLine l1, FileLine l2) {
 			// TODO implement compare() functionality
+			if (l2 != null) {
+				int colonIndex1 = l1.getString().indexOf(':');
+				int colonIndex2 = l2.getString().indexOf(':');
+				String sub1 = l1.getString().substring(0, colonIndex1);
+				String sub2 = l2.getString().substring(0, colonIndex2);
 			
-			int colonIndex1 = l1.getString().indexOf(':');
-			int colonIndex2 = l2.getString().indexOf(':');
-			String sub1 = l1.getString().substring(0, colonIndex1);
-			String sub2 = l2.getString().substring(0, colonIndex2);
-			
-			//Return -1 if FileLine1 comes before FileLine2
-			return sub1.compareTo(sub2);
-			
+				//Return -1 if FileLine1 comes before FileLine2	
+				return sub1.compareTo(sub2);
+			}
+			else {
+				return 0;
+			}
 		}
 		
 		public boolean equals(Object o) {
@@ -73,7 +76,38 @@ public class ThesaurusRecord extends Record{
 	 */
     public void join(FileLine w) {
 		// TODO implement join() functionality
+    	//Create key string and parse list of synonyms
+    	int colonIndex = w.getString().indexOf(':');
+    	String key = w.getString().substring(0, colonIndex);
+    	String remaining = w.getString().substring(colonIndex+1);
+		String[] temp = remaining.split(",");
     	
+    	//If record is empty initialize word and syn fields
+    	if (syn.isEmpty()) {
+    		
+    		//Create new record
+    		this.word = key;
+    		for (int i = 0; i < temp.length; i++) {
+    			syn.add(temp[i]);
+    		}
+    		Collections.sort(syn);
+    	} else {
+    		//if file line contains the same key:
+    		
+    		//check for synonyms in temp that aren't apart of syn
+	    	for (int count = 0; count < temp.length; count++ ){
+	    		boolean identical = false;
+	    		for (int count2 = 0; count2 < syn.size(); count2++ ) {
+	    			if (temp[count].equals(syn.get(count2))) {
+	    				identical = true;
+	    				break;
+	    			}
+	    		}
+	    		syn.add(temp[count]);
+	    		identical = false;
+	    	}
+    	}
+    	Collections.sort(syn);
     	
     }
 	
@@ -82,6 +116,16 @@ public class ThesaurusRecord extends Record{
 	 */
     public String toString() {
 		// TODO
-		return null;
+    	String output = this.word + ":";
+    	String add;
+    	for (int i = 0; i < syn.size(); i++) {
+    		if (i == syn.size() - 1) {
+    			add = syn.get(i);
+    		} else {
+    			add = syn.get(i) + ",";
+    		}
+    		output = output + add;
+    	}
+		return output;
 	}
 }
