@@ -6,7 +6,9 @@ import java.util.Comparator;
  * l stores the weather readings, in the same order as the files from which they came are indexed.
  */
 public class WeatherRecord extends Record{
-    // TODO declare data structures required
+	private int Station;
+	private int Date;
+	private double[] data;
 
 	/**
 	 * Constructs a new WeatherRecord by passing the parameter to the parent constructor
@@ -23,7 +25,15 @@ public class WeatherRecord extends Record{
 	 */
     private class WeatherLineComparator implements Comparator<FileLine> {
 		public int compare(FileLine l1, FileLine l2) {
-			// TODO implement compare() functionality
+			String[] s1 = l1.getString().split(",");
+			String[] s2 = l1.getString().split(",");
+			
+			if(!s1[0].equals(s2[0])){
+				return s1[0].compareTo(s2[0]);
+			}
+			else if(!s1[1].equals(s2[1])){
+				return s1[1].compareTo(s2[1]);
+			}
 			
 			return 0;
 		}
@@ -46,7 +56,14 @@ public class WeatherRecord extends Record{
 	 * the readings with Double.MIN_VALUE
 	 */
     public void clear() {
-		// TODO initialize/reset data members
+    	data = new double[this.getNumFiles()];
+    	Station = -1;
+    	Date = -1;
+    	
+    	for(int i = 0; i < data.length; i++){
+    		data[i] = Double.MIN_VALUE;
+    	}
+    	
     }
 
 	/**
@@ -57,7 +74,16 @@ public class WeatherRecord extends Record{
 	 * WeatherRecord should be set to the station and date values which were similarly parsed.
 	 */
     public void join(FileLine li) {
-		// TODO implement join() functionality
+    	String[] line = li.getString().split(",");
+    	int idx = li.getFileIterator().getIndex();
+    	
+    	if(-1 == Station || -1 == Date){
+    		this.Station = Integer.parseInt(line[0]);
+    		this.Date = Integer.parseInt(line[1]);
+    	}
+    	
+    	data[idx] = Double.parseDouble(line[2]);
+    	
     }
 	
 	/**
@@ -65,7 +91,18 @@ public class WeatherRecord extends Record{
 	 */
     public String toString() {
 		// TODO
+		String record = String.valueOf(Station); 
+		record = record.concat("," + Date);
 		
-		return null;
+    	for(int i = 0; i < data.length; i++){
+    		if(Double.MIN_VALUE == data[i]){
+    			record = record.concat(",-");
+    		}
+    		else{
+    			record = record.concat("," + data[i]);
+    		}
+    	}
+    	
+		return record;
     }
 }
