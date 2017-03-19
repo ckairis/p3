@@ -7,9 +7,9 @@ import java.util.*;
 
 public class ThesaurusRecord extends Record{
     // TODO declare data structures required
-	ArrayList<String> syn = new ArrayList<String>();
+	private ArrayList<String> syn = new ArrayList<String>();
 	
-	String word = null;
+	private String word = null;
 	
 	
 	/**
