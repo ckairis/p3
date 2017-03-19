@@ -1,3 +1,14 @@
+/////////////////////////////////////////////////////////////////////////////
+// Semester:         CS367 Spring 2017
+// PROJECT:          p3
+// FILE:             Reducer.java
+//
+// Authors: Cody Kairis, Cory Burich
+// Author1: Cory Burich, cburich@wisc.edu, cburich, lecture 002
+// Author2: Cody Kairis, kairis@wisc.edu, kairis, lecture 002
+//
+/////////////////////////////////////////////////////////////////////////////
+
 import java.io.*;
 import java.util.*;
 import java.lang.*;
