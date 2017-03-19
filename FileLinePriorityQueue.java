@@ -10,14 +10,16 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
     private Comparator<FileLine> cmp;
     private int maxSize;
     private FileLine[] queue;
+    private int numLines;
     
 
     public FileLinePriorityQueue(int initialSize, Comparator<FileLine> cmp) {
 		this.cmp = cmp;
 		maxSize = initialSize;
+		numLines = 0;
 		
 		// TODO
-		queue = new FileLine[maxSize];
+		queue = new FileLine[maxSize + 1];
     }
 
     /**
@@ -30,8 +32,81 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
      */
     public FileLine removeMin() throws PriorityQueueEmptyException {
 		// TODO
-
-		return null;
+    	if (isEmpty()) {
+    		throw new PriorityQueueEmptyException();
+    	}
+    	FileLine temp = queue[1];
+    	//Retain shape
+    	queue[1] = queue[numLines];
+    	boolean done = false;
+    	
+    	int parent = 1;
+    	
+    	while (!done) {
+    		int child1 = parent * 2;
+        	int child2 = (parent * 2) + 1;
+        	
+    		FileLine maxChild = null;
+        	//Find child with max priority
+        	if (child1 < queue.length && child2 < queue.length) {
+	    		
+	    		maxChild = maxChild(queue[child1], queue[child2]);
+        	} 
+        	//Both greater than the length, set max as parent
+        	else if (child1 >= queue.length && child2 >= queue.length) {
+        		maxChild = queue[parent];
+        	}
+        	else if (child1 >= queue.length) {
+        		maxChild = queue[child2];
+        	}
+        	else if (child2 >= queue.length) {
+        		maxChild = queue[child1];
+        	}
+        	
+    		
+    		int parentComp = cmp.compare(queue[parent], maxChild);
+    		
+    			
+    		//Compare parent to child
+    		if (parentComp <= 0) {
+    			done = true;
+    		} 
+    		//Swap parent and child if child higher priority
+    		else {
+    			FileLine hold = queue[parent];
+    			
+    			//child1 was the max, swap parent with it
+    			if (cmp.compare(maxChild, queue[child1]) == 0) {
+    				queue[parent] = queue[child1];
+        			queue[child1] = hold;
+        			parent = child1;
+    			}
+    			//child 2 was the max, swap parent with it
+    			else {
+    				queue[parent] = queue[child2];
+    				queue[child2] = hold;
+    				parent = child2;
+    			}
+    			
+    		}
+    	}
+    	
+    	numLines--;
+		return temp;
+    }
+    
+    private FileLine maxChild(FileLine a, FileLine b) {
+    	int compare = cmp.compare(a, b);
+    	
+    	if (compare < 0) {
+    		return a;
+    	}
+    	else if (compare == 0) {
+    		return a;
+    	}
+    	else {
+    		return b;
+    	}
     }
 
     /**
@@ -43,6 +118,56 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
      */
     public void insert(FileLine fl) throws PriorityQueueFullException {
 		// TODO
+    	boolean done = false;
+    	
+    	if (numLines >= (maxSize - 1)) {
+    		throw new PriorityQueueFullException();
+    	}
+    	//If empty insert FileLine into index one, skip comparisons
+    	if (numLines == 0) {
+    		queue[1] = fl;
+    		
+    	}
+    	//Otherwise, run comparisons
+    	else {
+    		//Local variable to keep track of the parent index
+        	int parent;
+        	int child = numLines + 1;
+        	//Insert the FileLine in the next available space in the queue
+        	queue[child] = fl;
+        	
+        	//Reheapify
+        	while (!done) {
+        		parent = child / 2;
+        		if (parent == 0) {
+        			break;
+        		}
+        		//Compare the strings of the parent and child to decide priority
+        		int compare = cmp.compare(queue[parent], queue[child]);
+        		
+        		//If parent and child's Strings are the same then exit loop
+        		if (compare == 0) {
+        			done = true;
+        		}
+        		//If parent's String comes before child's string, exit loop
+        		else if (compare < 0) {
+        			done = true;
+        		} 
+        		//Swap parent and child if priority of child is higher
+        		else {
+        			
+        			FileLine temp = queue[parent];
+        			queue[parent] = queue[child];
+        			queue[child] = temp;
+        			
+        			//Swap index of child with parent index
+        			child = parent;
+        		}
+        	}
+    	}
+  
+    	numLines++;
+    	
     }
 
     /**
@@ -64,6 +189,10 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
      */
     public boolean isEmpty() {
 		// TODO
-		return true;
+    	if (numLines == 0) {
+    		return true;
+    	} else {
+    		return false;
+    	}	
     }
 }
