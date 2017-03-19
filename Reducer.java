@@ -90,9 +90,6 @@ public class Reducer {
 		FileLine one = null;
 		FileLine two = null;
 		
-		//Key values to be comparing
-		String key = null;
-		String key2 = null;
 
 		//Remove first FileLine from the queue
 		try {
@@ -108,12 +105,12 @@ public class Reducer {
 			System.out.println("Priority queue full.");
 		}
 		
-		//Create key string and parse rest of line
-    	int colonIndex = one.getString().indexOf(':');
-    	key = one.getString().substring(0, colonIndex);
+		//Add this fileLine to the empty record
 		r.join(one);
 		
+		//Declare output string
 		String output = null;
+		
 		//Record has one entry in it, key has been established
 		while (!queue.isEmpty()) {
 			
@@ -127,17 +124,18 @@ public class Reducer {
 					queue.insert(two.getFileIterator().next());
 				}
 				
-				//Establish key value
-				int colonIndex2 = two.getString().indexOf(':');
-				key2 = two.getString().substring(0, colonIndex2);
+				//Compare the second fileLine with the one in the record
+				int compare = r.getComparator().compare(one, two);
+				
 				
 				//Compare key values
-				if (key.equals(key2)) {
+				if (compare == 0) {
 					
 					//Join if keys match
 					r.join(two);
+					
 				} else {
-					//Create/append to the output string if key words don't match
+					//Create/append to output string if key words don't match
 					output = output + r.toString() + "\n";
 				
 					//Clear record
@@ -148,9 +146,8 @@ public class Reducer {
 					
 					
 				}
-				//Change the references of two to one, for comparisons
+				//Change the references of two to one, for next comparison
 				one = two;
-				key = key2;
 				
 			} catch (PriorityQueueEmptyException e) {
 				System.out.println("Priority queue empty.");
@@ -174,3 +171,4 @@ public class Reducer {
 	}	
 		
 }
+
