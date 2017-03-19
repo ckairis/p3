@@ -1,4 +1,4 @@
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * The WeatherRecord class is the child class of Record to be used when merging weather data. Station and Date
@@ -6,8 +6,9 @@ import java.util.Comparator;
  * l stores the weather readings, in the same order as the files from which they came are indexed.
  */
 public class WeatherRecord extends Record{
-	private int Station;
-	private int Date;
+    // TODO declare data structures required
+	private int station;
+	private int date;
 	private double[] data;
 
 	/**
@@ -25,18 +26,24 @@ public class WeatherRecord extends Record{
 	 */
     private class WeatherLineComparator implements Comparator<FileLine> {
 		public int compare(FileLine l1, FileLine l2) {
-			String[] s1 = l1.getString().split(",");
-			String[] s2 = l1.getString().split(",");
-			
-			if(!s1[0].equals(s2[0])){
-				return s1[0].compareTo(s2[0]);
+			// TODO implement compare() functionality
+			if (l2 != null) {
+				String[] one = l1.getString().split(",");
+				String[] two = l2.getString().split(",");
+				
+				//Never compares any values other than station or date
+				if (one[0].equals(two[0])) {
+					return one[1].compareTo(two[1]);
+				}
+				else {
+					return one[0].compareTo(two[0]);
+				}	
 			}
-			else if(!s1[1].equals(s2[1])){
-				return s1[1].compareTo(s2[1]);
+			else {
+				return 0;
 			}
-			
-			return 0;
 		}
+			
 		
 		public boolean equals(Object o) {
 			return this.equals(o);
@@ -56,14 +63,14 @@ public class WeatherRecord extends Record{
 	 * the readings with Double.MIN_VALUE
 	 */
     public void clear() {
+		// TODO initialize/reset data members
     	data = new double[this.getNumFiles()];
-    	Station = -1;
-    	Date = -1;
+    	this.station = -1;
+    	this.date = -1;
     	
-    	for(int i = 0; i < data.length; i++){
+    	for (int i = 0; i < data.length; i++ ) {
     		data[i] = Double.MIN_VALUE;
     	}
-    	
     }
 
 	/**
@@ -74,15 +81,25 @@ public class WeatherRecord extends Record{
 	 * WeatherRecord should be set to the station and date values which were similarly parsed.
 	 */
     public void join(FileLine li) {
-    	String[] line = li.getString().split(",");
+		// TODO implement join() functionality
+    	
+    	//Initialize station and date for a fileLine
+    	String[] temp = li.getString().split(",");
     	int idx = li.getFileIterator().getIndex();
     	
-    	if(-1 == Station || -1 == Date){
-    		this.Station = Integer.parseInt(line[0]);
-    		this.Date = Integer.parseInt(line[1]);
+    	//Copy rest of string and parse into doubles if data is empty
+    	if (this.station == -1 || this.date == -1) {
+    		this.station = Integer.parseInt(temp[0]);
+        	this.date = Integer.parseInt(temp[1]);
+        	this.data[idx] = Double.parseDouble(temp[2]);
+    	} 
+    	else {
+    	
+    		data[idx] = Double.parseDouble(temp[2]);
+    		
     	}
     	
-    	data[idx] = Double.parseDouble(line[2]);
+    	
     	
     }
 	
@@ -91,18 +108,18 @@ public class WeatherRecord extends Record{
 	 */
     public String toString() {
 		// TODO
-		String record = String.valueOf(Station); 
-		record = record.concat("," + Date);
+		String output = String.valueOf(this.station);
+		output = output.concat("," + this.date);
 		
-    	for(int i = 0; i < data.length; i++){
-    		if(Double.MIN_VALUE == data[i]){
-    			record = record.concat(",-");
-    		}
-    		else{
-    			record = record.concat("," + data[i]);
-    		}
-    	}
-    	
-		return record;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] == Double.MIN_VALUE) {
+				output = output.concat(",-");
+			}
+			else {
+				output = output.concat("," + data[i]);
+			}
+		}
+		return output;
     }
 }
+
