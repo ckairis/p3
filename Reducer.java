@@ -70,8 +70,107 @@ public class Reducer {
 			System.exit(1);
 		}
 
-		// TODO
+		// TODO (main algorithm)
+		
+		//Create a new FileLinePriorityQueue
+		MinPriorityQueueADT<FileLine> queue = 
+				new FileLinePriorityQueue(fileList.size() + 1,
+						r.getComparator());
+		
+		//Add one line from each file by going through fileList
+		for (int i = 0; i < fileList.size(); i++ ) {
+			FileLine temp = fileList.get(i).next();
+			try {
+				queue.insert(temp);
+			} catch (PriorityQueueFullException e) {
+				System.out.println("Priority Queue Full.");
+			}
+		}
+		//Reference to the FileLine removed from the queue
+		FileLine one = null;
+		FileLine two = null;
+		
+		//Key values to be comparing
+		String key = null;
+		String key2 = null;
+
+		//Remove first FileLine from the queue
+		try {
+			one = queue.removeMin();
+			
+			//Replace the fileLine in the queue with another from the same file 
+			if (one.getFileIterator().hasNext()) {
+				queue.insert(one.getFileIterator().next());
+			}
+		} catch (PriorityQueueEmptyException e) {
+			System.out.println("Priority queue empty.");
+		} catch (PriorityQueueFullException e) {
+			System.out.println("Priority queue full.");
+		}
+		
+		//Create key string and parse rest of line
+    	int colonIndex = one.getString().indexOf(':');
+    	key = one.getString().substring(0, colonIndex);
+		r.join(one);
+		
+		String output = null;
+		//Record has one entry in it, key has been established
+		while (!queue.isEmpty()) {
+			
+			try {
+				
+				//Remove another fileLine from the queue
+				two = queue.removeMin();
+				
+				//Replace two in the queue
+				if (two.getFileIterator().hasNext()) {
+					queue.insert(two.getFileIterator().next());
+				}
+				
+				//Establish key value
+				int colonIndex2 = two.getString().indexOf(':');
+				key2 = two.getString().substring(0, colonIndex2);
+				
+				//Compare key values
+				if (key.equals(key2)) {
+					
+					//Join if keys match
+					r.join(two);
+				} else {
+					//Create/append to the output string if key words don't match
+					output = output + r.toString() + "\n";
+				
+					//Clear record
+					r.clear();
+					
+					//Add two to record after it's been cleared
+					r.join(two);
+					
+					
+				}
+				//Change the references of two to one, for comparisons
+				one = two;
+				key = key2;
+				
+			} catch (PriorityQueueEmptyException e) {
+				System.out.println("Priority queue empty.");
+			} catch (PriorityQueueFullException e) {
+				System.out.println("Priority queue full.");
+			} 
+			
+			
+		}
+		
+		//Write record to output file at the end
+		output = output + r.toString();
+		output = output.substring(4);
+		try (PrintWriter out = new PrintWriter(this.outFile)) {
+			out.println(output);
+		} catch (FileNotFoundException e) {
+			System.out.println("File Not Found.");
+		}
 		
 		
-    }
+	}	
+		
 }
