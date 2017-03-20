@@ -16,7 +16,7 @@ import java.util.*;
  * l stores the weather readings, in the same order as the files from which they came are indexed.
  */
 public class WeatherRecord extends Record{
-    // TODO declare data structures required
+ 
 	private int station;
 	private int date;
 	private double[] data;
@@ -30,13 +30,23 @@ public class WeatherRecord extends Record{
 		clear();
     }
 	
-	/**
-	 * This comparator should first compare the stations associated with the given FileLines. If 
-	 * they are the same, then the dates should be compared. 
+    /**
+	 * This class implements the comparator class and is used to compare two 
+	 * weather file lines
 	 */
     private class WeatherLineComparator implements Comparator<FileLine> {
+    	
+    	/**
+    	 * This method compares two weather file lines by first comparing the 
+    	 * stations and then comparing the dates.
+    	 * 
+    	 * @param l1 the Fileline being compared
+		 * @param l2 the Fileline being compared to
+		 * @return negative if l1 comes before l2, zero if the word is the
+		 * 				same, positive if l1 comes after l2
+    	 */
 		public int compare(FileLine l1, FileLine l2) {
-			// TODO implement compare() functionality
+			
 			if (l2 != null) {
 				String[] one = l1.getString().split(",");
 				String[] two = l2.getString().split(",");
@@ -61,19 +71,21 @@ public class WeatherRecord extends Record{
     }
     
 	/**
-	 * This method should simply create and return a new instance of the WeatherLineComparator
+	 * This method creates and returns a new instance of the WeatherLineComparator
 	 * class.
+	 * 
+	 * @return a new instance of a WeatherLineComarator
 	 */
     public Comparator<FileLine> getComparator() {
 		return new WeatherLineComparator();
     }
 	
 	/**
-	 * This method should fill each entry in the data structure containing
+	 * This method fills each entry in the data structure containing
 	 * the readings with Double.MIN_VALUE
 	 */
     public void clear() {
-		// TODO initialize/reset data members
+		
     	data = new double[this.getNumFiles()];
     	this.station = -1;
     	this.date = -1;
@@ -84,14 +96,11 @@ public class WeatherRecord extends Record{
     }
 
 	/**
-	 * This method should parse the String associated with the given FileLine to get the station, date, and reading
-	 * contained therein. Then, in the data structure holding each reading, the entry with index equal to the parameter 
-	 * FileLine's index should be set to the value of the reading. Also, so that
-	 * this method will handle merging when this WeatherRecord is empty, the station and date associated with this
-	 * WeatherRecord should be set to the station and date values which were similarly parsed.
+	 * This method parses the information contained in the given FileLine and inserts the
+	 * data into the record based on which file it came from.
 	 */
     public void join(FileLine li) {
-		// TODO implement join() functionality
+		
     	
     	//Initialize station and date for a fileLine
     	String[] temp = li.getString().split(",");
@@ -114,10 +123,12 @@ public class WeatherRecord extends Record{
     }
 	
 	/**
-	 * See the assignment description and example runs for the exact output format.
+	 * Returns a string of the weather record in the specified format.
+	 * 
+	 * @return weather record as a string
 	 */
     public String toString() {
-		// TODO
+	
 		String output = String.valueOf(this.station);
 		output = output.concat("," + this.date);
 		

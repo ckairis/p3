@@ -17,7 +17,7 @@ import java.util.Comparator;
  *
  */
 public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
-    // TODO
+   
     private Comparator<FileLine> cmp;
     private int maxSize;
     private FileLine[] queue;
@@ -29,7 +29,6 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
 		maxSize = initialSize;
 		numLines = 0;
 		
-		// TODO
 		queue = new FileLine[maxSize + 1];
     }
 
@@ -42,7 +41,7 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
      * in it
      */
     public FileLine removeMin() throws PriorityQueueEmptyException {
-		// TODO
+		
     	if (isEmpty()) {
     		throw new PriorityQueueEmptyException();
     	}
@@ -128,7 +127,7 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
      * @throws PriorityQueueFullException if the priority queue is full.
      */
     public void insert(FileLine fl) throws PriorityQueueFullException {
-		// TODO
+	
     	boolean done = false;
     	
     	if (numLines >= (maxSize - 1)) {
@@ -183,23 +182,11 @@ public class FileLinePriorityQueue implements MinPriorityQueueADT<FileLine> {
 
     /**
      * Checks if the queue is empty.
-     * e.g. 
-     * 
-     * <pre>
-     * {@code
-     * m = new MinPriorityQueue(); 
-     * // m.isEmpty(): true
-     * m.insert(FileLine fl);
-     * // m.isEmpty(): false
-     * m.remove();
-     * // m.isEmpty(): true
-     * }
-     * </pre>
      *
      * @return true, if it is empty; false otherwise
      */
     public boolean isEmpty() {
-		// TODO
+
     	if (numLines == 0) {
     		return true;
     	} else {

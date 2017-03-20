@@ -80,8 +80,6 @@ public class Reducer {
 			System.out.println("Invalid type of data! " + type);
 			System.exit(1);
 		}
-
-		// TODO (main algorithm)
 		
 		//Create a new FileLinePriorityQueue
 		MinPriorityQueueADT<FileLine> queue = 

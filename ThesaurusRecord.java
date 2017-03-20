@@ -16,7 +16,7 @@ import java.util.*;
  */
 
 public class ThesaurusRecord extends Record{
-    // TODO declare data structures required
+    
 	private ArrayList<String> syn = new ArrayList<String>();
 	
 	private String word = null;
@@ -32,16 +32,22 @@ public class ThesaurusRecord extends Record{
     }
 
     /**
-	 * This Comparator should simply behave like the default (lexicographic) compareTo() method
-	 * for Strings, applied to the portions of the FileLines' Strings up to the ":"
-	 * The getComparator() method of the ThesaurusRecord class will simply return an
-	 * instance of this class.
+	 * This class implements the comparator class and is used to compare two 
+	 * thesaurus file lines
 	 */
 	private class ThesaurusLineComparator implements Comparator<FileLine> {
 		
-		
+		/**
+		 * This method compares two thesaurus file lines and determines which
+		 * word comes first alphabetically.
+		 * 
+		 * @param l1 the Fileline being compared
+		 * @param l2 the Fileline being compared to
+		 * @return negative if l1 comes before l2, zero if the word is the
+		 * 				same, positive if l1 comes after l2
+		 */
 		public int compare(FileLine l1, FileLine l2) {
-			// TODO implement compare() functionality
+			
 			if (l2 != null) {
 				int colonIndex1 = l1.getString().indexOf(':');
 				int colonIndex2 = l2.getString().indexOf(':');
@@ -62,7 +68,9 @@ public class ThesaurusRecord extends Record{
     }
     
 	/**
-	 * This method should simply create and return a new instance of the ThesaurusLineComparator class.
+	 * This method creates and returns a new instance of the ThesaurusLineComparator class.
+	 * 
+	 * @return a new instance of a ThesaurusLineComarator
 	 */
     public Comparator<FileLine> getComparator() {
 		
@@ -71,21 +79,21 @@ public class ThesaurusRecord extends Record{
     }
 	
 	/**
-	 * This method should (1) set the word to null and (2) empty the list of synonyms.
+	 * This method sets the word to null and empties the list of synonyms.
 	 */
     public void clear() {
-		// TODO initialize/reset data members
+		
     	word = null;
     	
     	syn = new ArrayList<String>();
     }
 	
 	/**
-	 * This method should parse the list of synonyms contained in the given FileLine and insert any
+	 * This method parses the list of synonyms contained in the given FileLine and inserts any
 	 * which are not already found in this ThesaurusRecord's list of synonyms.
 	 */
     public void join(FileLine w) {
-		// TODO implement join() functionality
+	
     	//Create key string and parse list of synonyms
     	int colonIndex = w.getString().indexOf(':');
     	String key = w.getString().substring(0, colonIndex);
@@ -122,10 +130,13 @@ public class ThesaurusRecord extends Record{
     }
 	
 	/**
-	 * See the assignment description and example runs for the exact output format.
+	 * This method returns a string of the thesaurus record in the specified 
+	 * format.
+	 * 
+	 * @return thesaurus record as a string
 	 */
     public String toString() {
-		// TODO
+	
     	String output = this.word + ":";
     	String add;
     	for (int i = 0; i < syn.size(); i++) {
